@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileManagementAPI</name>
+    </assembly>
+    <members>
+        <member name="M:FileManagementAPI.Controllers.FileManagementController.Add(System.String,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Add IFormFileCollection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FileManagementAPI.Controllers.FileManagementController.Delete(System.String)">
+            <summary>
+            Delete File
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

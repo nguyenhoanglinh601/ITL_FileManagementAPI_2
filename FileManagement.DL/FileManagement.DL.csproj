@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="IService\ISysBaseEnumDetailService.cs" />
+    <Compile Remove="IService\ISysBaseEnumService.cs" />
+    <Compile Remove="IService\ISysTemplateDetailService.cs" />
+    <Compile Remove="IService\ISysTemplateService.cs" />
+    <Compile Remove="Services\SysBaseEnumDetailService.cs" />
+    <Compile Remove="Services\SysBaseEnumService.cs" />
+    <Compile Remove="Services\SysTemplateDetailService.cs" />
+    <Compile Remove="Services\SysTemplateService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.0.1" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.1.4" />
+    <PackageReference Include="EPPlus.Core" Version="1.5.4" />
+    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="1.1.16" />
+    <PackageReference Include="LocalizationCultureCore" Version="1.1.2" />
+	 <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dtos\" />
+    <Folder Include="Global\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileManagementAPI.Common\FileManagementAPI.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="eTMS.API.Common">
+      <HintPath>..\bin\netcoreapp2.2\eTMS.API.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="eTMS.IdentityServer.DL">
+      <HintPath>..\bin\netcoreapp2.2\eTMS.IdentityServer.DL.dll</HintPath>
+    </Reference>
+    <Reference Include="eTMS.IdentityServer.Service">
+      <HintPath>..\bin\netcoreapp2.2\eTMS.IdentityServer.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="ITL.NetCore.Common">
+      <HintPath>..\bin\netcoreapp2.2\ITL.NetCore.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ITL.NetCore.Connection">
+      <HintPath>..\bin\netcoreapp2.2\ITL.NetCore.Connection.dll</HintPath>
+    </Reference>
+    <Reference Include="FileManagementAPI.Service">
+      <HintPath>..\bin\netcoreapp2.2\FileManagementAPI.Service.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
