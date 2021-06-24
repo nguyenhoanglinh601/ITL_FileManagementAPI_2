@@ -127,12 +127,12 @@ namespace FileManagementAPI.Controllers
 
                     var ObjResult = await _AWSS3Service.GetObjectAsync(fileKey);
                     if (ObjResult != null) return File(ObjResult.Result, ObjResult.Extenstion, ObjResult.FileName);
-                    return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DELETE_FAIL_SYSTEM_ERROR]));
+                    return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DATA_NOT_FOUND]));
                 }
             }
             catch (Exception ex)
             {
-                return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DELETE_FAIL_SYSTEM_ERROR]));
+                return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DATA_NOT_FOUND]));
             }
             return Ok(null);
         }
@@ -153,7 +153,7 @@ namespace FileManagementAPI.Controllers
             //return Ok(new ResponseResult(HttpStatusCode.OK,newFullPath.Substring(string.Format("{0},{1}\\",Root,DocType).Length-1)));
 
             var result = _AWSS3Service.isExistCheckByName(FileName, DocType);
-            if (result) return Ok();
+            if (result == true) return Ok();
             return NotFound();
         }
         [HttpGet("GetFullPathFile")]
@@ -175,6 +175,7 @@ namespace FileManagementAPI.Controllers
 
             return _AWSS3Service.getContentType(fileKey);
         }
+
         [HttpGet(nameof(UserGuide))]
         //[Authorize]
         public IActionResult UserGuide()
@@ -185,103 +186,22 @@ namespace FileManagementAPI.Controllers
             return PhysicalFile(file, "application/msword");
         }
 
-        //[Route("getObject")]
-        //[HttpGet]
-        //public async Task<IActionResult> getObject(string fileKey, int type)
-        //{
-        //    try
-        //    {
-        //        var ObjResult = await _AWSS3Service.GetObjectAsync(fileKey, type);
-        //        //FileStreamResult file = new FileStreamResult(ObjResult.Result, ObjResult.Extenstion);
-        //        //file.FileDownloadName = "TestFileName";
-        //        //return file;
-        //        //return File(ObjResult.Result, ObjResult.Extenstion);
+        [Route("restoreObject")]
+        [HttpPost]
+        public async Task<IActionResult> restoreObject(string fileKey)
+        {
+            var result = _AWSS3Service.RestoreObjectAsync(fileKey);
+            if (result != null)
+            {
+                return Ok(result.Result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
 
-        //        //return ObjResult;
-
-        //        return Ok(ObjResult);
-        //    }
-        //    catch
-        //    {
-        //        return Ok("NoFile");
-        //    }
-        //}
-
-        //[Route("postObject")]
-        //[HttpPost]
-        //public async Task<IActionResult> postObject(IFormFile file, string fileName, int type)
-        //{
-        //    var result = await _AWSS3Service.PostObjectAsync(file, type);
-        //    if(result == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    else
-        //    {
-        //        return Ok(result.Response);
-        //    }
-            
-        //}
-
-        //[Route("generatePreSignedURL")]
-        //[HttpPost]
-        //public async Task<IActionResult> generatePresignedURL(string fileKey, int type, double duration)
-        //{
-        //    var result = _AWSS3Service.GeneratePreSignedURL(fileKey, type, duration);
-        //    if(result == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    else
-        //    {
-        //        return Ok(result);
-        //    }
-        //}
-
-        //[Route("deleteObject")]
-        //[HttpPost]
-        //public async Task<IActionResult> deleteObject(string fileKey, int type)
-        //{
-        //    var result = _AWSS3Service.DeleteObjectAsync(fileKey, type);
-        //    if(result.Result.HttpStatusCode == HttpStatusCode.NoContent)
-        //    {
-        //        return Ok(result.Result.HttpStatusCode);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(result.Result.HttpStatusCode);
-        //    }
-        //}
-
-        //[Route("restoreObject")]
-        //[HttpPost]
-        //public async Task<IActionResult> restoreObject(string fileKey)
-        //{
-        //    var result = _AWSS3Service.RestoreObjectAsync(fileKey);
-        //    if (result != null)
-        //    {
-        //        return Ok(result.Result);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(result);
-        //    }
-        //}
-
-        //[Route("testDBConnect")]
-        //[HttpGet]
-        //public async Task<IActionResult> testDBConnect()
-        //{
-        //    try
-        //    {
-        //        return Ok(await _AWSS3Service.testDBConnection());
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        return Ok(e);
-        //    }
-        //}
     }
 
-    
+
 }

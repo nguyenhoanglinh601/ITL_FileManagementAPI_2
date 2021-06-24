@@ -42,12 +42,8 @@ namespace FileManagement.DL.Services
         public readonly string profile = "default";
         public readonly ICsDocumentService _doc;
 
-        //lúc này nếu cần xử dụng csDocument thì e tiêm interface vô xài ICsDocumentService doc
         public AWSS3Service(ICsDocumentService doc)
         {
-            //thay where = GET
-            //doc.Get(x => x.FileName == "abc");
-
             _doc = doc;
             var chain = new CredentialProfileStoreChain();
             AWSCredentials awsCredentials;
@@ -77,8 +73,6 @@ namespace FileManagement.DL.Services
                     ObjResult.Extenstion = response.Headers["Content-Type"];
                     ObjResult.FileName = document.FileName;
 
-                    //FileStreamResult file = new FileStreamResult(ObjResult.Result, ObjResult.Extenstion);
-                    //file.FileDownloadName = document.FileName;
                     return ObjResult;
                 }
                 else
@@ -96,7 +90,6 @@ namespace FileManagement.DL.Services
             string millisecondsNow = ((long)(timeNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds).ToString();
             string fileExtension = file.FileName.Split(".").Last();
             string fileNameStorage = file.FileName.Split("."+fileExtension)[0] + "_" + millisecondsNow + "." + fileExtension;
-
             var putRequest = new PutObjectRequest()
             {
                 BucketName = "etms-test",
@@ -106,13 +99,13 @@ namespace FileManagement.DL.Services
  
             };
             var result = await _client.PutObjectAsync(putRequest);
-            
+
             if (result.HttpStatusCode == HttpStatusCode.OK)
             {
                 AWSS3PutObjectResponse putObjectResponse = new AWSS3PutObjectResponse();
 
                 CsDocumentModel documentModel = new CsDocumentModel();
-                documentModel.Id = new Guid(fileKey.ToString());
+                documentModel.Id = fileKey;
                 documentModel.ReferenceObject = "";
                 documentModel.DocType = stringType;
                 documentModel.FileName = file.FileName;
@@ -131,7 +124,7 @@ namespace FileManagement.DL.Services
 
                 putObjectResponse.Document = documentModel;
                 putObjectResponse.Response = result;
-                 return putObjectResponse;
+                return putObjectResponse;
             }
             else
             {
@@ -165,18 +158,15 @@ namespace FileManagement.DL.Services
                 VersionId = document.StorageVersionId
             };
 
-            try
-            {
-                var result = await _client.DeleteObjectAsync(request);
-                document.Inactive = true;
-                document.InactiveOn = DateTime.Now;
-                _doc.Update(document, d => d.Id == new Guid(fileKey), true);
-                return result;
-            }
-            catch
-            {
-                return null;
-            }
+            document.Inactive = true;
+            document.InactiveOn = DateTime.Now;
+            _doc.Update(document, d => d.Id == new Guid(fileKey), true);
+
+            var result = await _client.DeleteObjectAsync(request);
+
+            Debug.WriteLine("test-----------------------");
+
+            return result;
         }
         
         public async Task<RestoreObjectResponse> RestoreObjectAsync(string fileKey)
@@ -185,8 +175,8 @@ namespace FileManagement.DL.Services
             var restoreRequest = new RestoreObjectRequest
             {
                 BucketName = "etms-test",
-                Key = document.DocType + "/" + fileKey,
-                //VersionId = "c7WBY.yV.9kcoX_dv_VGuwhb4sp64s0.",
+                Key = document.DocType + "/" + document.StorageFileName,
+                VersionId = "5iq9w99_YmsCVXWFMQFYNphK_iDVCkWg",
                 Days = 1,
             };
             RestoreObjectResponse restoreResponse = await _client.RestoreObjectAsync(restoreRequest);
@@ -224,11 +214,5 @@ namespace FileManagement.DL.Services
             }
             return null;
         }
-
-        //public async Task<String> testDBConnection()
-        //{
-        //    var obj= _doc.First(d => d.Id == new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"));
-        //    return obj.Id.ToString();
-        //}
     }
 }
