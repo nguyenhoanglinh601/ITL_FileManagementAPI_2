@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -64,7 +65,7 @@ namespace FileManagementAPI.Controllers
                     //{
                     //    file.CopyTo(stream);
                     //}
-                    var result = await _AWSS3Service.PostObjectAsync(file, Int32.Parse(docType));
+                    var result = _AWSS3Service.PostObject(file, Int32.Parse(docType));
                     if(result != null) {
                         return Ok(new ResponseResult(HttpStatusCode.OK, _stringLocalizer[LanguageSub.MSG_INSERT_SUCCESS]));
                     }       
@@ -81,7 +82,7 @@ namespace FileManagementAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        public IActionResult Delete(string fileKey)
+        public IActionResult Delete(string fileKey, bool deletePermanent)
         {
             try
             {
@@ -93,7 +94,7 @@ namespace FileManagementAPI.Controllers
                 //}
                 if (_AWSS3Service.isExist(fileKey))
                 {
-                    var result = _AWSS3Service.DeleteObjectAsync(fileKey);
+                    var result = _AWSS3Service.DeleteObject(fileKey, deletePermanent);
                     if(result != null)
                     {
                         return Ok(new ResponseResult(HttpStatusCode.OK, _stringLocalizer[LanguageSub.MSG_DELETE_SUCCESS]));
@@ -107,8 +108,9 @@ namespace FileManagementAPI.Controllers
                 return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DELETE_FAIL_SYSTEM_ERROR]));
             }
         }
+
         [HttpGet]
-        public async Task<IActionResult> LoadDataFileAsync(string fileKey)
+        public async Task<IActionResult> LoadDataFileAsync(string fileKey, bool byVersionId)
         {
             try
             {
@@ -125,7 +127,7 @@ namespace FileManagementAPI.Controllers
                     //memory.Position = 0;
                     //return Ok(memory.ToArray());
 
-                    var ObjResult = await _AWSS3Service.GetObjectAsync(fileKey);
+                    var ObjResult = _AWSS3Service.GetObject(fileKey, byVersionId);
                     if (ObjResult != null) return File(ObjResult.Result, ObjResult.Extenstion, ObjResult.FileName);
                     return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DATA_NOT_FOUND]));
                 }
@@ -134,7 +136,7 @@ namespace FileManagementAPI.Controllers
             {
                 return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DATA_NOT_FOUND]));
             }
-            return Ok(null);
+            return Ok(new ResponseResult(HttpStatusCode.BadRequest, _stringLocalizer[LanguageSub.MSG_DATA_NOT_FOUND]));
         }
         [HttpGet("CheckFileName/{DocType}/{FileName}")]
         public IActionResult CheckFileName(int DocType,string FileName)
@@ -154,14 +156,18 @@ namespace FileManagementAPI.Controllers
 
             var result = _AWSS3Service.isExistCheckByName(FileName, DocType);
             if (result == true) return Ok();
-            return NotFound();
+            return Ok(new ResponseResult(HttpStatusCode.NotFound, _stringLocalizer[LanguageSub.MSG_OBJECT_NOT_EXISTS]));
         }
         [HttpGet("GetFullPathFile")]
-        public IActionResult GetFullPathFile(string fileKey, double duration)
+        public IActionResult GetFullPathFile(string fileKey, double duration, bool byVersionId)
         {
             //return Ok(new ResponseResult(HttpStatusCode.OK, string.Format("{0}{1}\\{2}", Root, DocType, FileName)));
-
-            return Ok(_AWSS3Service.GeneratePreSignedURL(fileKey, duration));
+            var result = _AWSS3Service.GeneratePreSignedURL(fileKey, duration, byVersionId);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return Ok(new ResponseResult(HttpStatusCode.NotFound, _stringLocalizer[LanguageSub.MSG_OBJECT_NOT_EXISTS]));
         }
         private string GetContentType(string fileKey)
         {
@@ -190,17 +196,31 @@ namespace FileManagementAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> restoreObject(string fileKey)
         {
-            var result = _AWSS3Service.RestoreObjectAsync(fileKey);
+            var result = _AWSS3Service.RestoreObject(fileKey);
             if (result != null)
             {
-                return Ok(result.Result);
+                return Ok(result);
             }
             else
             {
-                return BadRequest(result);
+                return Ok(new ResponseResult(HttpStatusCode.NotFound, _stringLocalizer[LanguageSub.MSG_OBJECT_NOT_EXISTS]));
             }
         }
 
+        //[Route("deleteTest")]
+        //[HttpPost]
+        //public async Task<IActionResult> deteleTest(string fileKey, bool deletePermanent)
+        //{
+        //    return Ok(_AWSS3Service.DeleteObjectAsync(fileKey, deletePermanent));
+        //}
+
+        //[Route("restoreTest")]
+        //[HttpPost]
+        //public async Task<IActionResult> restoreTest(string fileKey)
+        //{
+        //    var result = _AWSS3Service.RestoreObjectAsync(fileKey);
+        //    return Ok(result);
+        //}
     }
 
 

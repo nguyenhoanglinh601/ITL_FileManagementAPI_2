@@ -34,7 +34,7 @@ namespace FileManagementAPI.Service.Models
             {
                 entity.ToTable("csDocument");
 
-                entity.HasIndex(e => new { e.BranchId, e.ReferenceObject, e.DocType, e.FileName })
+                entity.HasIndex(e => new { e.BranchId, e.ReferenceObject, e.DocType, e.FileName, e.StorageFileName })
                     .HasName("U_Document")
                     .IsUnique();
 
@@ -68,6 +68,11 @@ namespace FileManagementAPI.Service.Models
                 entity.Property(e => e.ReferenceObject).HasMaxLength(100);
 
                 entity.Property(e => e.StorageFileName).HasMaxLength(150);
+
+                entity.Property(e => e.StorageOriginVersionId)
+                    .HasColumnName("StorageOriginVersionID")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.StorageVersionId)
                     .HasColumnName("StorageVersionID")

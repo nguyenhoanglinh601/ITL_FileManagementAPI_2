@@ -23,5 +23,6 @@ namespace FileManagementAPI.Service.Models
         public string FileExtension { get; set; }
         public string StorageFileName { get; set; }
         public string StorageVersionId { get; set; }
+        public string StorageOriginVersionId { get; set; }
     }
 }

@@ -46,3 +46,4 @@ C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.DAL\obj\Debug\netc
 C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.DAL\obj\Debug\netcoreapp2.2\FileManagementAPI.Service.csproj.CopyComplete
 C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.DAL\obj\Debug\netcoreapp2.2\FileManagementAPI.Service.dll
 C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.DAL\obj\Debug\netcoreapp2.2\FileManagementAPI.Service.pdb
+F:\ITL\FileManagementAPI\FileManagementAPI.DAL\obj\Debug\netcoreapp2.2\FileManagementAPI.Service.csprojAssemblyReference.cache

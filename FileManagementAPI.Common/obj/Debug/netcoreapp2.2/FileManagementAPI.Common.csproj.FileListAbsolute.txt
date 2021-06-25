@@ -31,3 +31,4 @@ C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.Common\obj\Debug\n
 C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.Common\obj\Debug\netcoreapp2.2\FileManagementAPI.Common.AssemblyInfo.cs
 C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.Common\obj\Debug\netcoreapp2.2\FileManagementAPI.Common.dll
 C:\Users\paul.buu\Desktop\FileManagementAPI\FileManagementAPI.Common\obj\Debug\netcoreapp2.2\FileManagementAPI.Common.pdb
+F:\ITL\FileManagementAPI\FileManagementAPI.Common\obj\Debug\netcoreapp2.2\FileManagementAPI.Common.csprojAssemblyReference.cache

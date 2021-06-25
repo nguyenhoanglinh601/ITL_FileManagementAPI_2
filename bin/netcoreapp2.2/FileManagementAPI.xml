@@ -10,7 +10,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:FileManagementAPI.Controllers.FileManagementController.Delete(System.String)">
+        <member name="M:FileManagementAPI.Controllers.FileManagementController.Delete(System.String,System.Boolean)">
             <summary>
             Delete File
             </summary>
